@@ -1,0 +1,165 @@
+CREATE DATABASE restaurante;
+
+// CRUD-CREATE
+
+CREATE TABLE usuario (
+id SERIAL,
+name VARCHAR(30),
+email VARCHAR(30),
+password VARCHAR(30),
+phone int,
+PRIMARY KEY (id),
+);
+CREATE DATABASE restaurante;
+
+// CRUD-CREATE
+
+CREATE TABLE usuario (
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(30),
+email VARCHAR(30),
+password VARCHAR(30),
+phone int,
+PRIMARY KEY (id),
+);
+
+//--------------------------------------//
+CREATE TABLE restaurante(
+id SERIAL,
+name VARCHAR(30),
+email VARCHAR(30),
+phone int,
+address VARCHAR(30),
+PRIMARY KEY (id)
+);
+
+CREATE TABLE restaurante(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(30),
+email VARCHAR(30),
+phone int,
+address VARCHAR(30)
+);
+
+//--------------------------------------//
+CREATE TABLE reserva(
+id SERIAL,
+usuario_id INT,
+restaurante_id INT,
+date DATE,
+hour TIME,
+PRIMARY KEY (id), 
+FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+FOREIGN KEY (restaurante_id) REFERENCES restaurante(id)
+);
+
+CREATE TABLE reserva(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+usuario_id INT(11) ,
+restaurante_id INT(11),
+date DATE,
+hour TIME, 
+CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+CONSTRAINT fk_restaurante FOREIGN KEY (restaurante_id) REFERENCES restaurante(id)
+);
+
+//--------------------------------------//
+
+CREATE TABLE dias(
+id SERIAL,
+name VARCHAR(30),
+PRIMARY KEY (id)
+);
+
+CREATE TABLE dias(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(30)
+);
+
+//--------------------------------------//
+
+CREATE TABLE horario(
+id SERIAL,
+day_id INT,
+restaurante_id INT,
+horaApertura TIME,
+horaCerrar TIME,
+PRIMARY KEY (id),
+FOREIGN KEY (day_id) REFERENCES dias(id),
+FOREIGN KEY (restaurante_id) REFERENCES restaurante(id)
+);
+
+CREATE TABLE horario(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+day_id INT,
+restaurante_id INT,
+horaapertura TIME,
+horacerrar TIME,
+CONSTRAINT fk_day FOREIGN KEY (day_id) REFERENCES dias(id),
+CONSTRAINT fk_restaurante FOREIGN KEY (restaurante_id) REFERENCES restaurante(id)
+);
+
+//--------------------------------------//
+
+//INSERTAR
+
+INSERT INTO usuario (name, email, password, phone) VALUES
+('JOSE', 'GATO@JJJJ', '12345', 123456),
+('PEPE', 'PEPE@JJJJ', '12345', 123456),
+('PEDRO', 'PEDRO@JJJJ', '12345', 123456);
+
+INSERT INTO restaurante (name, email, phone) VALUES
+('COMIDAJOSE', 'COMIDAGATO@JJJJ', 12345),
+('ALMUERZOPEPE', 'ALMUERZOPEPE@JJJJ', 12345),
+('CENAPEDRO', 'CENA@JJJJ', 12345);
+
+INSERT INTO reserva (usuario_id, restaurante_id, date, hour) VALUES
+(1, 1,'2019/05/25','12:00:00'),
+(2, 1,'2019/05/25','18:00:00'),
+(3, 2,'2019/05/25','20:00:00');
+
+
+INSERT INTO dias (name) VALUES
+('Lunes'),
+('Martes'),
+('Miercoles'),
+('Jueves'),
+('Viernes'),
+('Sabado'),
+('Domingo');
+
+INSERT INTO horario (day_id, restaurante_id, horaApertura, horaCerrar) VALUES
+(3, 1,'13:00:00','18:00:00'),
+(4, 1,'13:00:00','20:00:00'),
+(5, 1,'13:00:00','20:00:00'),
+(6, 1,'13:00:00','20:00:00'),
+(7, 1,'13:00:00','20:00:00'),
+(3, 2,'13:00:00','18:00:00'),
+(4, 2,'13:00:00','20:00:00'),
+(5, 2,'13:00:00','20:00:00'),
+(6, 2,'13:00:00','20:00:00'),
+(7, 2,'13:00:00','20:00:00'),
+(3, 3,'13:00:00','18:00:00'),
+(4, 3,'13:00:00','20:00:00'),
+(5, 3,'13:00:00','20:00:00'),
+(6, 3,'13:00:00','20:00:00'),
+(7, 3,'13:00:00','20:00:00');
+
+//-------------------------------------------------------//
+SELECT 
+	re.id, us.name, us.phone, rest.name, re.date, re.hour 
+FROM 
+	reserva re 
+INNER JOIN
+	usuario us on re.usuario_id=us.id 
+INNER JOIN 
+	restaurante rest on re.usuario_id=rest.id;
+//-------------------------------------------------------//
+SELECT 
+	h.id, rest.name, d.name, h.horaapertura, h.horacerrar 
+FROM 
+	horario h 
+INNER JOIN 
+	restaurante rest on h.restaurante_id=rest.id
+INNER JOIN 
+	dias d on h.day_id=d.id;
